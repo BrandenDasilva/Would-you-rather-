@@ -7,6 +7,8 @@ struct ContentView: View {
     @State private var showResults = false
     @State private var showResetAlert = false
     
+    private let resultsDisplayDuration: TimeInterval = 3.0
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -107,7 +109,7 @@ struct ContentView: View {
                             showResults = true
                         }
                         
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + resultsDisplayDuration) {
                             withAnimation {
                                 showResults = false
                                 selectedOption = nil

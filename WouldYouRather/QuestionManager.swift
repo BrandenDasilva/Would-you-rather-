@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import os.log
 
 class QuestionManager: ObservableObject {
     @Published var questions: [Question] = []
@@ -8,6 +9,7 @@ class QuestionManager: ObservableObject {
     
     private let questionsKey = "savedQuestions"
     private let responsesKey = "userResponses"
+    private let logger = Logger(subsystem: "com.wouldyourather.app", category: "QuestionManager")
     
     init() {
         loadQuestions()
@@ -87,6 +89,11 @@ class QuestionManager: ObservableObject {
         } else {
             currentQuestion = unaskedQuestions.randomElement()
         }
+        
+        // Fallback if no questions available (edge case for empty question set)
+        if currentQuestion == nil && !questions.isEmpty {
+            currentQuestion = questions.first
+        }
     }
     
     func recordResponse(question: Question, selectedOption: String) {
@@ -123,7 +130,7 @@ class QuestionManager: ObservableObject {
             let encoded = try JSONEncoder().encode(questions)
             UserDefaults.standard.set(encoded, forKey: questionsKey)
         } catch {
-            print("Error saving questions: \(error.localizedDescription)")
+            logger.error("Failed to save questions: \(error.localizedDescription)")
         }
     }
     
@@ -132,7 +139,7 @@ class QuestionManager: ObservableObject {
         do {
             questions = try JSONDecoder().decode([Question].self, from: data)
         } catch {
-            print("Error loading questions: \(error.localizedDescription)")
+            logger.error("Failed to load questions: \(error.localizedDescription)")
         }
     }
     
@@ -141,7 +148,7 @@ class QuestionManager: ObservableObject {
             let encoded = try JSONEncoder().encode(userResponses)
             UserDefaults.standard.set(encoded, forKey: responsesKey)
         } catch {
-            print("Error saving responses: \(error.localizedDescription)")
+            logger.error("Failed to save responses: \(error.localizedDescription)")
         }
     }
     
@@ -150,7 +157,7 @@ class QuestionManager: ObservableObject {
         do {
             userResponses = try JSONDecoder().decode([UserResponse].self, from: data)
         } catch {
-            print("Error loading responses: \(error.localizedDescription)")
+            logger.error("Failed to load responses: \(error.localizedDescription)")
         }
     }
     
