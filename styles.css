@@ -154,6 +154,11 @@ header h1 {
     transform: scale(0.98);
 }
 
+.option-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .option-btn.selected {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -198,7 +203,29 @@ header h1 {
     transform: scale(0.98);
 }
 
+.new-question-btn {
+    background: #8b5cf6;
+    border: none;
+    border-radius: 15px;
+    padding: 16px;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 20px auto;
+    max-width: 600px;
+    width: calc(100% - 80px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.new-question-btn:active {
+    transform: scale(0.98);
+}
+
 .submit-btn.hidden,
+.new-question-btn.hidden,
 .hidden {
     display: none !important;
 }
