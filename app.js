@@ -167,7 +167,6 @@ class QuestionManager {
 class App {
     constructor() {
         this.manager = new QuestionManager();
-        this.resultsDisplayDuration = 3000; // 3 seconds
         this.initializeUI();
         this.attachEventListeners();
         this.renderQuestion();
@@ -182,6 +181,7 @@ class App {
             optionA: document.getElementById('option-a'),
             optionB: document.getElementById('option-b'),
             submitBtn: document.getElementById('submit-btn'),
+            newQuestionBtn: document.getElementById('new-question-btn'),
             resetBtn: document.getElementById('reset-btn'),
             historyBtn: document.getElementById('history-btn'),
             doneBtn: document.getElementById('done-btn'),
@@ -197,6 +197,7 @@ class App {
         this.elements.optionA.addEventListener('click', () => this.selectOption('A'));
         this.elements.optionB.addEventListener('click', () => this.selectOption('B'));
         this.elements.submitBtn.addEventListener('click', () => this.submitResponse());
+        this.elements.newQuestionBtn.addEventListener('click', () => this.getNewQuestion());
         this.elements.resetBtn.addEventListener('click', () => this.showResetModal());
         this.elements.historyBtn.addEventListener('click', () => this.showHistory());
         this.elements.doneBtn.addEventListener('click', () => this.hideHistory());
@@ -223,13 +224,18 @@ class App {
 
         this.manager.recordResponse(this.manager.selectedOption);
         this.showResults();
+        
+        // Hide submit button, show new question button
+        this.elements.submitBtn.classList.add('hidden');
+        this.elements.newQuestionBtn.classList.remove('hidden');
+    }
 
-        setTimeout(() => {
-            this.manager.selectNextQuestion();
-            this.manager.selectedOption = null;
-            this.renderQuestion();
-            this.hideResults();
-        }, this.resultsDisplayDuration);
+    getNewQuestion() {
+        this.manager.selectNextQuestion();
+        this.manager.selectedOption = null;
+        this.renderQuestion();
+        this.hideResults();
+        this.elements.newQuestionBtn.classList.add('hidden');
     }
 
     renderQuestion() {
@@ -242,6 +248,10 @@ class App {
         this.elements.optionA.classList.remove('selected');
         this.elements.optionB.classList.remove('selected');
         this.elements.submitBtn.classList.add('hidden');
+        
+        // Re-enable option buttons for new question
+        this.elements.optionA.disabled = false;
+        this.elements.optionB.disabled = false;
     }
 
     showResults() {
@@ -262,6 +272,10 @@ class App {
         optionBResult.querySelector('.result-votes').textContent = question.responseB + ' votes';
 
         document.querySelector('.total-responses').textContent = `Total Responses: ${total}`;
+
+        // Disable option buttons after submission
+        this.elements.optionA.disabled = true;
+        this.elements.optionB.disabled = true;
 
         // Hide question view, show results view
         this.elements.questionView.classList.add('hidden');
