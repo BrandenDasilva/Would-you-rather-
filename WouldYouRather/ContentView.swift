@@ -5,6 +5,7 @@ struct ContentView: View {
     @State private var showHistory = false
     @State private var selectedOption: String?
     @State private var showResults = false
+    @State private var showResetAlert = false
     
     var body: some View {
         NavigationView {
@@ -42,7 +43,7 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        showResetAlert()
+                        showResetAlert = true
                     }) {
                         Image(systemName: "arrow.counterclockwise")
                             .foregroundColor(.white)
@@ -51,6 +52,14 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showHistory) {
                 HistoryView(questionManager: questionManager)
+            }
+            .alert("Reset All Data?", isPresented: $showResetAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Reset", role: .destructive) {
+                    questionManager.resetAllData()
+                }
+            } message: {
+                Text("This will reset all questions and delete all response history. This action cannot be undone.")
             }
         }
     }
@@ -158,12 +167,6 @@ struct ContentView: View {
         withAnimation(.spring()) {
             selectedOption = option
         }
-    }
-    
-    private func showResetAlert() {
-        // Note: Alert functionality would require state management
-        // For simplicity, directly reset
-        questionManager.resetAllData()
     }
 }
 

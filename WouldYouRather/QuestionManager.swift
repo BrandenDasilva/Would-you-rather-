@@ -119,28 +119,38 @@ class QuestionManager: ObservableObject {
     }
     
     private func saveQuestions() {
-        if let encoded = try? JSONEncoder().encode(questions) {
+        do {
+            let encoded = try JSONEncoder().encode(questions)
             UserDefaults.standard.set(encoded, forKey: questionsKey)
+        } catch {
+            print("Error saving questions: \(error.localizedDescription)")
         }
     }
     
     private func loadQuestions() {
-        if let data = UserDefaults.standard.data(forKey: questionsKey),
-           let decoded = try? JSONDecoder().decode([Question].self, from: data) {
-            questions = decoded
+        guard let data = UserDefaults.standard.data(forKey: questionsKey) else { return }
+        do {
+            questions = try JSONDecoder().decode([Question].self, from: data)
+        } catch {
+            print("Error loading questions: \(error.localizedDescription)")
         }
     }
     
     private func saveResponses() {
-        if let encoded = try? JSONEncoder().encode(userResponses) {
+        do {
+            let encoded = try JSONEncoder().encode(userResponses)
             UserDefaults.standard.set(encoded, forKey: responsesKey)
+        } catch {
+            print("Error saving responses: \(error.localizedDescription)")
         }
     }
     
     private func loadResponses() {
-        if let data = UserDefaults.standard.data(forKey: responsesKey),
-           let decoded = try? JSONDecoder().decode([UserResponse].self, from: data) {
-            userResponses = decoded
+        guard let data = UserDefaults.standard.data(forKey: responsesKey) else { return }
+        do {
+            userResponses = try JSONDecoder().decode([UserResponse].self, from: data)
+        } catch {
+            print("Error loading responses: \(error.localizedDescription)")
         }
     }
     
