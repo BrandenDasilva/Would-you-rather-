@@ -1,7 +1,7 @@
 # Would You Rather App - Feature Documentation
 
 ## App Overview
-A fun, engaging iOS app that presents "Would You Rather" questions to help users relax and have fun conversations.
+A fun, engaging web app that presents "Would You Rather" questions to help users relax and have fun conversations. Works on any device, especially optimized for iPhone Safari.
 
 ## Core Features
 
@@ -23,8 +23,8 @@ A fun, engaging iOS app that presents "Would You Rather" questions to help users
   - Percentage breakdown for each option
   - Individual vote counts
 - **Data Persistence**:
-  - All data saved locally using UserDefaults
-  - Persists between app sessions
+  - All data saved locally using localStorage
+  - Persists between browser sessions
   - Automatic save on every response
 
 ### 3. Results Display
@@ -53,7 +53,7 @@ A fun, engaging iOS app that presents "Would You Rather" questions to help users
 
 ### 6. Reset Functionality
 - **Access**: Counter-clockwise arrow in navigation bar
-- **Safety**: Confirmation alert before resetting
+- **Safety**: Confirmation modal before resetting
 - **Action**: Clears all statistics and response history
 - **Warning**: Includes clear message about data loss
 
@@ -72,18 +72,17 @@ The app includes 50+ questions across various themes:
 
 ### Data Models
 - **Question**: ID, options, response counts, asked status
-- **UserResponse**: ID, question reference, selection, timestamp
+- **QuestionManager**: Class managing all app state and logic
 
 ### State Management
-- **QuestionManager**: ObservableObject managing all app state
-- **Published Properties**: Reactive UI updates
-- **MVVM Pattern**: Clean separation of concerns
+- **localStorage**: Browser-based persistence
+- **Reactive Updates**: Immediate UI updates on state changes
 
 ### UI Components
-- **ContentView**: Main question display and interaction
-- **HistoryView**: Question history with statistics
-- **OptionButton**: Reusable button component
-- **ResultCard**: Result display component
+- **Main View**: Question display and interaction
+- **History View**: Question history with statistics
+- **Modal**: Confirmation dialog for reset
+- **Animations**: Smooth transitions and visual feedback
 
 ## User Experience Flow
 
@@ -103,20 +102,45 @@ The app includes 50+ questions across various themes:
 - **Visual**: Colorful, gradient backgrounds
 - **Smooth**: Animations and transitions throughout
 - **Safe**: Confirmation for destructive actions
+- **Mobile-First**: Optimized for touch interactions
+
+## Mobile Optimizations
+
+- **Touch-Friendly**: Large tap targets
+- **Responsive**: Adapts to all screen sizes
+- **Fast**: No external dependencies
+- **Offline**: Works without internet after first load
+- **PWA Ready**: Can be added to home screen
 
 ## No Internet Required
 
 All functionality works offline:
-- Questions pre-loaded
+- Questions pre-loaded in JavaScript
 - Local data storage
 - No external API calls
 - No user accounts needed
 
 ## Privacy
 
-- All data stays on device
+- All data stays on device (localStorage)
 - No personal information collected
 - No analytics or tracking
 - No data sharing
+- No cookies
 
-This design ensures users can enjoy the app anytime, anywhere, without worries!
+## Installation as App
+
+### iPhone/iPad
+1. Open in Safari
+2. Tap Share button
+3. Select "Add to Home Screen"
+4. App icon appears on home screen
+
+### Android
+1. Open in Chrome
+2. Tap menu (3 dots)
+3. Select "Add to Home screen"
+4. App icon appears on home screen
+
+This design ensures users can enjoy the app anytime, anywhere, on any device without worries!
+
