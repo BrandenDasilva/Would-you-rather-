@@ -224,8 +224,51 @@ header h1 {
     transform: scale(0.98);
 }
 
+.skip-question-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 15px;
+    padding: 14px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 10px auto;
+    max-width: 600px;
+    width: calc(100% - 80px);
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.skip-question-btn:active {
+    transform: scale(0.98);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.hide-results-btn {
+    background: #f59e0b;
+    border: none;
+    border-radius: 15px;
+    padding: 16px;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    margin: 10px auto;
+    max-width: 600px;
+    width: calc(100% - 80px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hide-results-btn:active {
+    transform: scale(0.98);
+}
+
 .submit-btn.hidden,
 .new-question-btn.hidden,
+.hide-results-btn.hidden,
 .hidden {
     display: none !important;
 }

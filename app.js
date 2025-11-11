@@ -109,6 +109,16 @@ class QuestionManager {
             this.questions[questionIndex].responseB++;
         }
 
+        // Note: We don't mark as asked here anymore
+        this.saveData();
+    }
+
+    markQuestionAsAsked() {
+        if (!this.currentQuestion) return;
+        
+        const questionIndex = this.questions.findIndex(q => q.id === this.currentQuestion.id);
+        if (questionIndex === -1) return;
+
         this.questions[questionIndex].hasBeenAsked = true;
         this.saveData();
     }
@@ -181,7 +191,9 @@ class App {
             optionA: document.getElementById('option-a'),
             optionB: document.getElementById('option-b'),
             submitBtn: document.getElementById('submit-btn'),
+            skipQuestionBtn: document.getElementById('skip-question-btn'),
             newQuestionBtn: document.getElementById('new-question-btn'),
+            hideResultsBtn: document.getElementById('hide-results-btn'),
             resetBtn: document.getElementById('reset-btn'),
             historyBtn: document.getElementById('history-btn'),
             doneBtn: document.getElementById('done-btn'),
@@ -197,7 +209,9 @@ class App {
         this.elements.optionA.addEventListener('click', () => this.selectOption('A'));
         this.elements.optionB.addEventListener('click', () => this.selectOption('B'));
         this.elements.submitBtn.addEventListener('click', () => this.submitResponse());
+        this.elements.skipQuestionBtn.addEventListener('click', () => this.skipQuestion());
         this.elements.newQuestionBtn.addEventListener('click', () => this.getNewQuestion());
+        this.elements.hideResultsBtn.addEventListener('click', () => this.hideResultsAndKeepQuestion());
         this.elements.resetBtn.addEventListener('click', () => this.showResetModal());
         this.elements.historyBtn.addEventListener('click', () => this.showHistory());
         this.elements.doneBtn.addEventListener('click', () => this.hideHistory());
@@ -225,17 +239,32 @@ class App {
         this.manager.recordResponse(this.manager.selectedOption);
         this.showResults();
         
-        // Hide submit button, show new question button
+        // Hide submit and skip buttons
         this.elements.submitBtn.classList.add('hidden');
-        this.elements.newQuestionBtn.classList.remove('hidden');
+        this.elements.skipQuestionBtn.classList.add('hidden');
+    }
+
+    skipQuestion() {
+        // Get a new question without recording a response
+        this.manager.selectNextQuestion();
+        this.manager.selectedOption = null;
+        this.renderQuestion();
     }
 
     getNewQuestion() {
+        // Mark current question as asked and get a new one
+        this.manager.markQuestionAsAsked();
         this.manager.selectNextQuestion();
         this.manager.selectedOption = null;
         this.renderQuestion();
         this.hideResults();
-        this.elements.newQuestionBtn.classList.add('hidden');
+    }
+
+    hideResultsAndKeepQuestion() {
+        // Hide results but keep the same question for asking more people
+        this.manager.selectedOption = null;
+        this.hideResults();
+        this.renderQuestion();
     }
 
     renderQuestion() {
@@ -248,6 +277,7 @@ class App {
         this.elements.optionA.classList.remove('selected');
         this.elements.optionB.classList.remove('selected');
         this.elements.submitBtn.classList.add('hidden');
+        this.elements.skipQuestionBtn.classList.remove('hidden');
         
         // Re-enable option buttons for new question
         this.elements.optionA.disabled = false;
@@ -277,9 +307,11 @@ class App {
         this.elements.optionA.disabled = true;
         this.elements.optionB.disabled = true;
 
-        // Hide question view, show results view
+        // Hide question view, show results view with buttons
         this.elements.questionView.classList.add('hidden');
         this.elements.resultsView.classList.remove('hidden');
+        this.elements.hideResultsBtn.classList.remove('hidden');
+        this.elements.newQuestionBtn.classList.remove('hidden');
 
         // Animate bars
         setTimeout(() => {
@@ -291,6 +323,8 @@ class App {
     hideResults() {
         this.elements.resultsView.classList.add('hidden');
         this.elements.questionView.classList.remove('hidden');
+        this.elements.hideResultsBtn.classList.add('hidden');
+        this.elements.newQuestionBtn.classList.add('hidden');
         
         // Reset bars
         document.querySelectorAll('.result-bar').forEach(bar => {
